@@ -2,7 +2,9 @@ import React from "react";
 import {
   AbsoluteFill,
   Audio,
+  Video,
   interpolate,
+  random,
   spring,
   staticFile,
   useCurrentFrame,
@@ -10,12 +12,12 @@ import {
 } from "remotion";
 import { loadFont as loadGurmukhi } from "@remotion/google-fonts/NotoSansGurmukhi";
 import { loadFont as loadLatin } from "@remotion/google-fonts/Poppins";
-import { Background } from "./Background";
 import { theme } from "./theme";
+import { StyledText, TextStyle } from "./TextFx";
+import { Background } from "./Background";
 
 const gurmukhi = loadGurmukhi();
 const latin = loadLatin();
-
 const hasGurmukhi = (s: string) => /[\u0A00-\u0A7F]/.test(s);
 
 export type QuoteReelProps = {
@@ -23,6 +25,8 @@ export type QuoteReelProps = {
   broll: string | null;
   music: string | null;
   seed: number;
+  textStyle?: TextStyle;
+  layout?: "card" | "full";
 };
 
 export const QuoteReel: React.FC<QuoteReelProps> = ({
@@ -30,24 +34,21 @@ export const QuoteReel: React.FC<QuoteReelProps> = ({
   broll,
   music,
   seed,
+  textStyle = "glow",
+  layout = "card",
 }) => {
   const frame = useCurrentFrame();
-  const { fps, durationInFrames } = useVideoConfig();
+  const { fps, width, durationInFrames } = useVideoConfig();
 
+  const lines = quote.split("\n").filter((l) => l.trim().length > 0);
+  const headline = lines[0] ?? quote;
+  const rest = lines.slice(1).join("\n");
   const punjabi = hasGurmukhi(quote);
   const fontFamily = punjabi ? gurmukhi.fontFamily : latin.fontFamily;
-  const len = quote.length;
-  const fontSize = len <= 70 ? 78 : len <= 130 ? 66 : 56;
+  const headSize = headline.length <= 40 ? 60 : headline.length <= 70 ? 52 : 44;
 
-  // Hook-first: full opacity at frame 0, only a gentle settle
   const settle = spring({ frame, fps, config: { damping: 200 }, durationInFrames: 25 });
-  const scale = interpolate(settle, [0, 1], [1.045, 1]);
-
-  const ruleWidth = interpolate(frame, [8, 40], [0, 220], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-  });
-
+  const scale = interpolate(settle, [0, 1], [1.03, 1]);
   const outro = interpolate(
     frame,
     [durationInFrames - 14, durationInFrames],
@@ -55,72 +56,144 @@ export const QuoteReel: React.FC<QuoteReelProps> = ({
     { extrapolateLeft: "clamp" }
   );
 
-  return (
-    <AbsoluteFill>
-      <Background broll={broll} seed={seed} />
-      {music ? <Audio src={staticFile(music)} volume={0.9} loop /> : null}
+  const watermark = (
+    <div
+      style={{
+        position: "absolute",
+        bottom: 84,
+        width: "100%",
+        textAlign: "center",
+        fontFamily: latin.fontFamily,
+        fontWeight: 400,
+        fontSize: 26,
+        letterSpacing: 2,
+        color: "rgba(255,255,255,0.85)",
+      }}
+    >
+      {theme.handle}
+    </div>
+  );
 
-      <AbsoluteFill
+  if (layout === "full") {
+    // Full-bleed footage (or generated background) with text over it
+    return (
+      <AbsoluteFill style={{ opacity: outro }}>
+        <Background broll={broll} seed={seed} />
+        {music ? <Audio src={staticFile(music)} volume={0.9} loop /> : null}
+        <div
+          style={{
+            position: "absolute",
+            top: textStyle === "strip" ? 200 : "38%",
+            width: "100%",
+            padding: "0 70px",
+            transform: `scale(${scale})`,
+          }}
+        >
+          <StyledText
+            text={rest ? `${headline}\n${rest}` : headline}
+            textStyle={textStyle}
+            fontFamily={fontFamily}
+            fontSize={headSize}
+            fontWeight={600}
+          />
+        </div>
+        {watermark}
+      </AbsoluteFill>
+    );
+  }
+
+  // Card layout: black canvas + letterboxed cinematic strip
+  const stripH = Math.round((width * 9) / 16);
+  return (
+    <AbsoluteFill style={{ backgroundColor: "#050505", opacity: outro }}>
+      {music ? <Audio src={staticFile(music)} volume={0.9} loop /> : null}
+      <div
         style={{
-          justifyContent: "center",
-          alignItems: "center",
-          padding: "0 90px",
-          opacity: outro,
+          position: "absolute",
+          top: 190,
+          width: "100%",
+          padding: "0 70px",
+          transform: `scale(${scale})`,
         }}
       >
-        <div
-          style={{
-            position: "absolute",
-            top: 150,
-            fontFamily: gurmukhi.fontFamily,
-            fontSize: 64,
-            color: theme.gold,
-            textShadow: `0 0 26px rgba(232,196,107,0.55)`,
-          }}
-        >
-          {"\u0A74"}
-        </div>
-
-        <div
-          style={{
-            transform: `scale(${scale})`,
-            fontFamily,
-            fontWeight: 600,
-            fontSize,
-            lineHeight: 1.4,
-            color: theme.cream,
-            textAlign: "center",
-            maxWidth: 880,
-            textShadow: "0 4px 26px rgba(0,0,0,0.55)",
-          }}
-        >
-          {quote}
-        </div>
-
-        <div
-          style={{
-            marginTop: 54,
-            height: 3,
-            width: ruleWidth,
-            backgroundColor: theme.gold,
-            borderRadius: 2,
-          }}
+        <StyledText
+          text={headline}
+          textStyle={textStyle === "strip" ? "simple" : textStyle}
+          fontFamily={fontFamily}
+          fontSize={headSize}
+          fontWeight={700}
         />
+        {rest ? (
+          <div style={{ marginTop: 26 }}>
+            <StyledText
+              text={rest}
+              textStyle={textStyle === "strip" ? "simple" : textStyle}
+              fontFamily={fontFamily}
+              fontSize={Math.max(36, headSize - 14)}
+              fontWeight={500}
+              color="#f2f2f2"
+            />
+          </div>
+        ) : null}
+      </div>
 
-        <div
-          style={{
-            position: "absolute",
-            bottom: 130,
-            fontFamily: latin.fontFamily,
-            fontWeight: 500,
-            fontSize: 34,
-            letterSpacing: 3,
-            color: theme.gold,
-          }}
-        >
-          {theme.handle}
-        </div>
-      </AbsoluteFill>
+      <div
+        style={{
+          position: "absolute",
+          top: "46%",
+          width: "100%",
+          height: stripH,
+          overflow: "hidden",
+          backgroundColor: "#0a0a0a",
+        }}
+      >
+        {broll ? (
+          <Video
+            src={staticFile(broll)}
+            muted
+            loop
+            style={{ width: "100%", height: "100%", objectFit: "cover" }}
+          />
+        ) : (
+          <GoldDust seed={seed} />
+        )}
+      </div>
+      {watermark}
+    </AbsoluteFill>
+  );
+};
+
+const GoldDust: React.FC<{ seed: number }> = ({ seed }) => {
+  const frame = useCurrentFrame();
+  const dots = new Array(26).fill(0).map((_, i) => {
+    const rx = random(`gx-${seed}-${i}`);
+    const ry = random(`gy-${seed}-${i}`);
+    const rs = random(`gs-${seed}-${i}`);
+    const drift = Math.sin(frame / 55 + i * 1.7) * 20;
+    return (
+      <div
+        key={i}
+        style={{
+          position: "absolute",
+          left: `${rx * 100}%`,
+          top: `calc(${ry * 100}% + ${drift}px)`,
+          width: 3 + rs * 6,
+          height: 3 + rs * 6,
+          borderRadius: "50%",
+          backgroundColor: theme.gold,
+          opacity: 0.15 + rs * 0.3,
+          filter: "blur(1px)",
+        }}
+      />
+    );
+  });
+  return (
+    <AbsoluteFill
+      style={{
+        background: `radial-gradient(ellipse 80% 90% at 50% 60%, #1a1a10, #0a0a0a)`,
+      }}
+    >
+      {dots}
     </AbsoluteFill>
   );
 };

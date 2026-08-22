@@ -5,5 +5,5 @@ export const theme = {
   gold: "#e8c46b",
   goldDeep: "#c9a227",
   cream: "#f6f0e1",
-  handle: "@thesikhsoul",
+  handle: "@TheSikhSoul",
 };

@@ -12,6 +12,7 @@ import { loadFont as loadGurmukhi } from "@remotion/google-fonts/NotoSansGurmukh
 import { loadFont as loadLatin } from "@remotion/google-fonts/Poppins";
 import { Background } from "./Background";
 import { theme } from "./theme";
+import { StyledText, TextStyle } from "./TextFx";
 
 const gurmukhi = loadGurmukhi();
 const latin = loadLatin();
@@ -24,6 +25,7 @@ export type GurpurabReelProps = {
   broll: string | null;
   music: string | null;
   seed: number;
+  textStyle?: TextStyle;
 };
 
 export const GurpurabReel: React.FC<GurpurabReelProps> = ({
@@ -34,6 +36,7 @@ export const GurpurabReel: React.FC<GurpurabReelProps> = ({
   broll,
   music,
   seed,
+  textStyle = "shine",
 }) => {
   const frame = useCurrentFrame();
   const { fps, durationInFrames } = useVideoConfig();
@@ -79,20 +82,16 @@ export const GurpurabReel: React.FC<GurpurabReelProps> = ({
           {"\u0A74"}
         </div>
 
-        <div
-          style={{
-            transform: `scale(${scale})`,
-            fontFamily: gurmukhi.fontFamily,
-            fontWeight: 700,
-            fontSize: paSize,
-            lineHeight: 1.45,
-            color: theme.cream,
-            textAlign: "center",
-            maxWidth: 900,
-            textShadow: "0 4px 26px rgba(0,0,0,0.6)",
-          }}
-        >
-          {titlePa}
+        <div style={{ transform: `scale(${scale})`, maxWidth: 900 }}>
+          <StyledText
+            text={titlePa}
+            textStyle={textStyle}
+            fontFamily={gurmukhi.fontFamily}
+            fontSize={paSize}
+            fontWeight={700}
+            lineHeight={1.45}
+            color={theme.cream}
+          />
         </div>
 
         <div
@@ -110,18 +109,15 @@ export const GurpurabReel: React.FC<GurpurabReelProps> = ({
           {titleEn}
         </div>
 
-        <div
-          style={{
-            marginTop: 46,
-            opacity: sub,
-            fontFamily: gurmukhi.fontFamily,
-            fontWeight: 600,
-            fontSize: 46,
-            color: theme.gold,
-            textAlign: "center",
-          }}
-        >
-          {greeting}
+        <div style={{ marginTop: 46, opacity: sub }}>
+          <StyledText
+            text={greeting}
+            textStyle={textStyle === "shine" ? "shine" : "simple"}
+            fontFamily={gurmukhi.fontFamily}
+            fontSize={46}
+            fontWeight={600}
+            color={theme.gold}
+          />
         </div>
 
         <div
