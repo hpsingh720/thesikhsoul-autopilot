@@ -2,6 +2,7 @@ import React from "react";
 import { Composition } from "remotion";
 import { QuoteReel, QuoteReelProps } from "./QuoteReel";
 import { GurpurabReel, GurpurabReelProps } from "./GurpurabReel";
+import { MontageReel, MontageReelProps } from "./MontageReel";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -39,6 +40,30 @@ export const RemotionRoot: React.FC = () => {
             music: null,
             seed: 1,
           } satisfies GurpurabReelProps
+        }
+      />
+      <Composition
+        id="MontageReel"
+        component={MontageReel}
+        durationInFrames={420}
+        fps={30}
+        width={1080}
+        height={1920}
+        calculateMetadata={({ props }) => ({
+          durationInFrames: props.durationInFrames ?? 420,
+        })}
+        defaultProps={
+          {
+            quote: "ਜਿੱਥੇ ਸਿਮਰਨ ਹੈ, ਉੱਥੇ ਸਕੂਨ ਹੈ।",
+            clips: [],
+            music: "",
+            segments: [],
+            audioStartFrom: 0,
+            durationInFrames: 420,
+            textStyle: "glow",
+            logo: null,
+            seed: 1,
+          } satisfies MontageReelProps
         }
       />
     </>
