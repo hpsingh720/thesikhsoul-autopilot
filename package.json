@@ -1,0 +1,27 @@
+{
+  "name": "thesikhsoul-autopilot",
+  "version": "1.0.0",
+  "description": "Automated daily Sikhi reels: Nanakshahi-calendar-aware render + Instagram publish",
+  "scripts": {
+    "studio": "remotion studio src/index.ts",
+    "plan": "node scripts/plan.mjs",
+    "post": "node scripts/post.mjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@remotion/cli": "^4.0.515",
+    "@remotion/google-fonts": "^4.0.515",
+    "nanakshahi": "^9.0.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "remotion": "^4.0.515"
+  },
+  "devDependencies": {
+    "@types/node": "^26.2.0",
+    "@types/react": "^19.2.18",
+    "typescript": "^7.0.2"
+  },
+  "private": true
+}
