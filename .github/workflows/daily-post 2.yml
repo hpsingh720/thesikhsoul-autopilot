@@ -1,0 +1,62 @@
+name: Daily Post
+on:
+  schedule:
+    - cron: "30 0 * * *"   # 6:00 AM India time, every day
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "true = render only, don't post to Instagram"
+        default: "false"
+concurrency: daily-post
+permissions:
+  contents: write
+jobs:
+  render-and-post:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - name: Install Chrome libraries
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -yq libnss3 libdbus-1-3 libatk1.0-0 libatk-bridge2.0-0 libcups2 libdrm2 libxkbcommon0 libxcomposite1 libxdamage1 libxfixes3 libxrandr2 libgbm1 || true
+          sudo apt-get install -yq libasound2t64 || sudo apt-get install -yq libasound2 || true
+      - run: npm ci
+      - run: npx remotion browser ensure
+      - name: Sync inbox (Telegram)
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_ALLOWED_USERNAME: ${{ secrets.TELEGRAM_ALLOWED_USERNAME }}
+        run: node scripts/ingest_telegram.mjs
+      - name: Plan today's content (Sikh calendar check)
+        run: node scripts/plan.mjs
+      - name: Render reel
+        run: |
+          COMP=$(node -p "JSON.parse(require('fs').readFileSync('out/plan.json','utf8')).composition")
+          FILE=$(node -p "JSON.parse(require('fs').readFileSync('out/plan.json','utf8')).filename")
+          mkdir -p videos
+          npx remotion render src/index.ts "$COMP" "videos/$FILE" --props=out/props.json --codec=h264
+          echo "FILE=$FILE" >> "$GITHUB_ENV"
+      - name: Save video to repository
+        run: |
+          git config user.name "sikhsoul-bot"
+          git config user.email "actions@users.noreply.github.com"
+          ls -t videos/*.mp4 2>/dev/null | tail -n +11 | xargs -r rm --
+          git add -A videos content public
+          git commit -m "Reel ${FILE}" || echo "nothing new"
+          git push
+      - name: Wait for file to be publicly reachable
+        run: sleep 40
+      - name: Post to Instagram
+        env:
+          IG_USER_ID: ${{ secrets.IG_USER_ID }}
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+          DRY_RUN: ${{ github.event.inputs.dry_run || vars.DRY_RUN || 'false' }}
+        run: |
+          VIDEO_URL="https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/main/videos/${FILE}"
+          echo "Video URL: $VIDEO_URL"
+          VIDEO_URL="$VIDEO_URL" node scripts/post.mjs

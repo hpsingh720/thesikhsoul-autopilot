@@ -1,0 +1,29 @@
+name: Inbox Sync
+on:
+  schedule:
+    - cron: "0 */6 * * *"   # every 6 hours
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency: inbox-sync
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Pull new quotes and media from Telegram
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_ALLOWED_USERNAME: ${{ secrets.TELEGRAM_ALLOWED_USERNAME }}
+        run: node scripts/ingest_telegram.mjs
+      - name: Commit new content
+        run: |
+          git config user.name "inbox-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A content public
+          git commit -m "Inbox sync" || echo "nothing new"
+          git push
