@@ -40,6 +40,7 @@ const download = async (fileId, destDir, prefix) => {
   return path.relative(ROOT, dest);
 };
 
+const STARTER_QUOTES = new Set(["ਜਿੱਥੇ ਸਿਮਰਨ ਹੈ, ਉੱਥੇ ਸਕੂਨ ਹੈ।", "Peace isn't found. It's remembered — one Waheguru at a time.", "ਸੇਵਾ ਵਿੱਚ ਹੀ ਅਸਲ ਵਡਿਆਈ ਹੈ।", "Chardi Kala is not the absence of storms. It is the sail.", "ਵਾਹਿਗੁਰੂ ਦਾ ਨਾਮ, ਦਿਲ ਦਾ ਆਰਾਮ।", "Seva asks for no spotlight. That is exactly why it shines.", "An honest day's kirat is also a prayer.", "ਚੜ੍ਹਦੀ ਕਲਾ ਵਿੱਚ ਰਹੋ, ਸਰਬੱਤ ਦਾ ਭਲਾ ਮੰਗੋ।", "Naam in the heart. Humility in the head. Seva in the hands.", "Sangat lifts what willpower alone cannot.", "The storm checks your roots. Simran is how you water them.", "ਮਿਹਨਤ ਆਪਣੀ, ਭਰੋਸਾ ਵਾਹਿਗੁਰੂ ਤੇ।"]);
 const quotesPath = path.join(ROOT, "content/quotes.json");
 const quotes = fs.existsSync(quotesPath) ? JSON.parse(fs.readFileSync(quotesPath, "utf8")) : [];
 let added = { quotes: 0, videos: 0, tracks: 0 };
@@ -63,8 +64,19 @@ for (const u of updates) {
         added.quotes++;
         await reply(chat, `✅ Quote saved (#${quotes.length} in the bank).`);
       }
+    } else if (m.text === "/clean") {
+      const own = quotes.filter((q) => !STARTER_QUOTES.has(q.text));
+      if (own.length === 0) {
+        await reply(chat, "⚠️ Cleaning now would empty the bank. Send me some of your quotes first, then /clean.");
+      } else {
+        const removed = quotes.length - own.length;
+        quotes.length = 0;
+        quotes.push(...own);
+        fs.writeFileSync(path.join(ROOT, "content/state.json"), JSON.stringify({ index: 0 }, null, 2));
+        await reply(chat, `🧹 Removed ${removed} starter quotes. The bank is now 100% you: ${own.length} quotes, rotation restarted.`);
+      }
     } else if (m.text === "/start") {
-      await reply(chat, "🙏 TheSikhSoul Inbox ready.\n• Text me a quote → quote bank\n• Send a video (normal, not as file) → b-roll\n• Send an mp3 → music library");
+      await reply(chat, "🙏 TheSikhSoul Inbox ready.\n• Text me a quote → quote bank\n• Send a video (normal, not as file) → b-roll\n• Send an mp3 → music library\n• /clean → remove the built-in starter quotes once yours are in");
     } else if (m.video || (m.document && (m.document.mime_type || "").startsWith("video/"))) {
       const v = m.video || m.document;
       if ((v.file_size || 0) > MAX_BYTES) {
