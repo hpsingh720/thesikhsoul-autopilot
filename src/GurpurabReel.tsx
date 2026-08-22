@@ -2,6 +2,7 @@ import React from "react";
 import {
   AbsoluteFill,
   Audio,
+  Img,
   interpolate,
   spring,
   staticFile,
@@ -25,6 +26,7 @@ export type GurpurabReelProps = {
   broll: string | null;
   music: string | null;
   seed: number;
+  logo?: string | null;
   textStyle?: TextStyle;
 };
 
@@ -36,6 +38,7 @@ export const GurpurabReel: React.FC<GurpurabReelProps> = ({
   broll,
   music,
   seed,
+  logo = null,
   textStyle = "shine",
 }) => {
   const frame = useCurrentFrame();
@@ -69,18 +72,31 @@ export const GurpurabReel: React.FC<GurpurabReelProps> = ({
           opacity: outro,
         }}
       >
-        <div
-          style={{
-            position: "absolute",
-            top: 140,
-            fontFamily: gurmukhi.fontFamily,
-            fontSize: 70,
-            color: theme.gold,
-            textShadow: `0 0 28px rgba(232,196,107,0.6)`,
-          }}
-        >
-          {"\u0A74"}
-        </div>
+        {logo ? (
+          <Img
+            src={staticFile(logo)}
+            style={{
+              position: "absolute",
+              top: 110,
+              width: 116,
+              height: 116,
+              filter: "drop-shadow(0 3px 12px rgba(0,0,0,0.7))",
+            }}
+          />
+        ) : (
+          <div
+            style={{
+              position: "absolute",
+              top: 140,
+              fontFamily: gurmukhi.fontFamily,
+              fontSize: 70,
+              color: theme.gold,
+              textShadow: `0 0 28px rgba(232,196,107,0.6)`,
+            }}
+          >
+            {"\u0A74"}
+          </div>
+        )}
 
         <div style={{ transform: `scale(${scale})`, maxWidth: 900 }}>
           <StyledText

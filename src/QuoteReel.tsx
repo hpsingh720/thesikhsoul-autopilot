@@ -2,6 +2,7 @@ import React from "react";
 import {
   AbsoluteFill,
   Audio,
+  Img,
   Video,
   interpolate,
   random,
@@ -25,6 +26,7 @@ export type QuoteReelProps = {
   broll: string | null;
   music: string | null;
   seed: number;
+  logo?: string | null;
   textStyle?: TextStyle;
   layout?: "card" | "full";
 };
@@ -34,6 +36,7 @@ export const QuoteReel: React.FC<QuoteReelProps> = ({
   broll,
   music,
   seed,
+  logo = null,
   textStyle = "glow",
   layout = "card",
 }) => {
@@ -80,6 +83,19 @@ export const QuoteReel: React.FC<QuoteReelProps> = ({
       <AbsoluteFill style={{ opacity: outro }}>
         <Background broll={broll} seed={seed} />
         {music ? <Audio src={staticFile(music)} volume={0.9} loop /> : null}
+        {logo ? (
+          <Img
+            src={staticFile(logo)}
+            style={{
+              position: "absolute",
+              top: 64,
+              left: 56,
+              width: 110,
+              height: 110,
+              filter: "drop-shadow(0 3px 10px rgba(0,0,0,0.6))",
+            }}
+          />
+        ) : null}
         <div
           style={{
             position: "absolute",
@@ -107,6 +123,20 @@ export const QuoteReel: React.FC<QuoteReelProps> = ({
   return (
     <AbsoluteFill style={{ backgroundColor: "#050505", opacity: outro }}>
       {music ? <Audio src={staticFile(music)} volume={0.9} loop /> : null}
+      {logo ? (
+        <Img
+          src={staticFile(logo)}
+          style={{
+            position: "absolute",
+            top: 66,
+            left: "50%",
+            transform: "translateX(-50%)",
+            width: 92,
+            height: 92,
+            filter: "drop-shadow(0 3px 10px rgba(0,0,0,0.7))",
+          }}
+        />
+      ) : null}
       <div
         style={{
           position: "absolute",

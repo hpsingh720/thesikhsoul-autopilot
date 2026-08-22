@@ -26,6 +26,7 @@ const brollFile = pickSeeded(listMedia("broll", [".mp4", ".mov", ".m4v"]));
 const musicFile = pickSeeded(listMedia("music", [".mp3", ".m4a", ".wav", ".aac"]));
 const broll = brollFile ? `broll/${brollFile}` : null;
 const music = musicFile ? `music/${musicFile}` : null;
+const logo = fs.existsSync(path.join(ROOT, "public/logo.png")) ? "logo.png" : null;
 
 const nd = getNanakshahiDate(istNow);
 const dateLine = `${nd.punjabiDate.date} ${nd.punjabiDate.monthName} ${nd.punjabiDate.year} ਨਾਨਕਸ਼ਾਹੀ`;
@@ -36,6 +37,12 @@ const historical = events.filter((e) => e.type === "historical");
 const sangrand = events.find(
   (e) => e.type === "calendar" && /^Beginning of /i.test(e.en)
 );
+
+const TEXT_STYLES = ["glow", "shine", "simple", "strip"];
+const LAYOUTS = ["card", "full"];
+const h = (n) => Math.abs((seed * 2654435761 + n * 96769) % 104729);
+const dailyTextStyle = TEXT_STYLES[h(1) % TEXT_STYLES.length];
+const dailyLayout = LAYOUTS[h(2) % LAYOUTS.length];
 
 const TAGS =
   "#Sikhi #Sikh #Gurbani #Waheguru #Punjab #ਗੁਰਬਾਣੀ #SikhSoul #ChardiKala";
@@ -54,7 +61,7 @@ if (gurpurabs.length > 0 || historical.length > 0) {
     : `🙏 ${ev.en}\n${ev.pa}\n\nLakh Lakh Vadhaiyan to the entire Sangat!`;
   plan = {
     composition: "GurpurabReel",
-    props: { titlePa: ev.pa, titleEn: ev.en, greeting, dateLine, broll, music, seed },
+    props: { titlePa: ev.pa, titleEn: ev.en, greeting, dateLine, broll, music, seed, logo, textStyle: solemn ? "simple" : "shine" },
     caption: `${capLead}\n\nFollow ${"@thesikhsoul"} for daily Sikhi.\n\n${TAGS}`,
     kind: solemn ? "shahidi-tribute" : "gurpurab",
   };
@@ -71,6 +78,8 @@ if (gurpurabs.length > 0 || historical.length > 0) {
       broll,
       music,
       seed,
+      logo,
+      textStyle: "glow",
     },
     caption: `🌅 Sangrand — ${monthEn} (${monthPa})\n\nSangrand diyan Lakh Lakh Vadhaiyan!\n\nFollow @thesikhsoul for daily Sikhi.\n\n${TAGS}`,
     kind: "sangrand",
@@ -88,7 +97,7 @@ if (gurpurabs.length > 0 || historical.length > 0) {
   fs.writeFileSync(statePath, JSON.stringify(state, null, 2));
   plan = {
     composition: "QuoteReel",
-    props: { quote: q.text, broll, music, seed },
+    props: { quote: q.text, broll, music, seed, logo, textStyle: dailyTextStyle, layout: dailyLayout },
     caption: `${q.text}\n\nFollow @thesikhsoul for daily Sikhi 🙏\n\n${TAGS}`,
     kind: "quote",
   };
