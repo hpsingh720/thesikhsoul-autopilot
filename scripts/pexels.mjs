@@ -8,13 +8,14 @@ const isPixabay = (k) => /^\d+-[0-9a-f]+$/i.test(k || "");
 export const pexelsOn = () => Boolean(KEY);
 
 const pixabay = async (q, usedIds, want, got) => {
-  const res = await fetch(`https://pixabay.com/api/videos/?key=${KEY}&q=${encodeURIComponent(q)}&safesearch=true&per_page=30`);
+  const res = await fetch(`https://pixabay.com/api/videos/?key=${KEY}&q=${encodeURIComponent(q)}&safesearch=true&per_page=200`);
   const json = await res.json();
   for (const v of json.hits || []) {
     if (got.length >= want) break;
     const id = `pb-${v.id}`;
     if (usedIds.has(id) || got.some((g) => g.id === id) || (v.duration || 0) < 5) continue;
-    const f = ["large", "medium"].map((s) => v.videos?.[s]).find((x) => x?.url && x.size < 40_000_000 && Math.max(x.width, x.height) <= 1920);
+    // Vertical only (taller than wide), so the reel is full-screen footage, no bars.
+    const f = ["large", "medium"].map((s) => v.videos?.[s]).find((x) => x?.url && x.height > x.width && x.size < 40_000_000 && x.height <= 1920);
     if (!f) continue;
     const dl = await fetch(f.url);
     if (!dl.ok) continue;

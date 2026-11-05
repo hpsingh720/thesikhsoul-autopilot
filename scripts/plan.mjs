@@ -109,7 +109,7 @@ if (occasion && tone) {
     kind = kind || options[options.length - 1][0];
   }
   const styles = ["glow", "shine", "simple", "strip"];
-  const layout = rand(5) < 0.5 ? "card" : "full";
+  const layout = "full"; // full-screen vertical footage on every reel
 
   if (kind === "hukamnama") {
     const [clip] = await takeClips(1, huk.en || "peace");
