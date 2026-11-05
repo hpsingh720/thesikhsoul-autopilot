@@ -20,6 +20,7 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_ALLOWED_USERNAME: ${{ secrets.TELEGRAM_ALLOWED_USERNAME }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: node scripts/ingest_telegram.mjs
       - name: Commit new content
         run: |
