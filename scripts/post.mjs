@@ -1,6 +1,8 @@
 // Publishes the rendered reel to Instagram via the official Graph API.
 // Needs env: IG_USER_ID, IG_ACCESS_TOKEN, VIDEO_URL. Optional: DRY_RUN=true.
 import fs from "node:fs";
+import { loadHistory, saveHistory } from "./history.mjs";
+import { notify } from "./notify.mjs";
 
 const { IG_USER_ID, IG_ACCESS_TOKEN, VIDEO_URL, DRY_RUN } = process.env;
 const G = "https://graph.instagram.com/v23.0";
@@ -60,7 +62,12 @@ try {
   console.log("Publishing…");
   const pub = await api(`${G}/${IG_USER_ID}/media_publish`, { creation_id: id });
   console.log("✅ Posted! Media ID:", pub.id);
+  const h = loadHistory();
+  const rec = [...h.posts].reverse().find((x) => x.file === plan.filename);
+  if (rec) { rec.mediaId = pub.id; saveHistory(h); }
+  await notify(`✅ Posted today's ${plan.kind} reel.`);
 } catch (err) {
   console.error("❌ Posting failed:", err.message);
+  await notify("❌ Today's post failed: " + err.message.slice(0, 300));
   process.exit(1);
 }

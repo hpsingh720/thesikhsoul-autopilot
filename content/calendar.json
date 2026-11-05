@@ -1,0 +1,10 @@
+{
+  "_help": "Only dates in this list get occasion posts. kind decides the tone: parkash, gurgaddi, purab = celebration (Lakh Lakh Vadhaiyan). joti-jot, shaheedi, remembrance = solemn (Kot Kot Parnaam). Add more from the SGPC jantri by texting the bot: /add 2026-12-14 shaheedi Sri Guru Tegh Bahadur Sahib Ji",
+  "events": [
+    { "date": "2026-11-11", "kind": "gurgaddi", "en": "Gurgaddi Divas Sri Guru Granth Sahib Ji", "pa": "ਗੁਰਗੱਦੀ ਦਿਵਸ ਸ੍ਰੀ ਗੁਰੂ ਗ੍ਰੰਥ ਸਾਹਿਬ ਜੀ" },
+    { "date": "2026-11-16", "kind": "shaheedi", "en": "Shaheedi Divas Shaheed Kartar Singh Sarabha", "pa": "ਸ਼ਹੀਦੀ ਦਿਹਾੜਾ ਸ਼ਹੀਦ ਕਰਤਾਰ ਸਿੰਘ ਸਰਾਭਾ" },
+    { "date": "2026-11-24", "kind": "parkash", "en": "Parkash Purab Sri Guru Nanak Dev Ji", "pa": "ਪ੍ਰਕਾਸ਼ ਪੁਰਬ ਸ੍ਰੀ ਗੁਰੂ ਨਾਨਕ ਦੇਵ ਜੀ" },
+    { "date": "2026-12-14", "kind": "shaheedi", "en": "Shaheedi Purab Sri Guru Tegh Bahadur Sahib Ji", "pa": "ਸ਼ਹੀਦੀ ਪੁਰਬ ਸ੍ਰੀ ਗੁਰੂ ਤੇਗ ਬਹਾਦਰ ਸਾਹਿਬ ਜੀ" },
+    { "date": "2026-12-28", "kind": "shaheedi", "en": "Shaheedi Sabha Sri Fatehgarh Sahib — Chhote Sahibzade", "pa": "ਸ਼ਹੀਦੀ ਜੋੜ ਮੇਲ ਸ੍ਰੀ ਫ਼ਤਹਿਗੜ੍ਹ ਸਾਹਿਬ — ਛੋਟੇ ਸਾਹਿਬਜ਼ਾਦੇ" }
+  ]
+}

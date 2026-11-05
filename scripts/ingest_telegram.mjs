@@ -2,6 +2,9 @@
 // Manpreet sends to his private Telegram bot, straight into the repo.
 import fs from "node:fs";
 import path from "node:path";
+import { loadCalendar, saveCalendar, KINDS } from "./calendar.mjs";
+import { aiOn, quoteIdeas } from "./ai.mjs";
+import { loadHistory } from "./history.mjs";
 
 const TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const ALLOWED = (process.env.TELEGRAM_ALLOWED_USERNAME || "").replace(/^@/, "").toLowerCase();
@@ -53,6 +56,7 @@ for (const u of updates) {
   const from = (m.from?.username || "").toLowerCase();
   if (ALLOWED && from !== ALLOWED) continue; // strangers are ignored
   const chat = m.chat.id;
+  state.chatId = chat;
 
   try {
     if (m.text && !m.text.startsWith("/")) {
@@ -75,12 +79,57 @@ for (const u of updates) {
         fs.writeFileSync(path.join(ROOT, "content/state.json"), JSON.stringify({ index: 0 }, null, 2));
         await reply(chat, `🧹 Removed ${removed} starter quotes. The bank is now 100% you: ${own.length} quotes, rotation restarted.`);
       }
+    } else if (m.text && m.text.startsWith("/add ")) {
+      const mm = m.text.match(/^\/add\s+(\d{4}-\d{2}-\d{2})\s+(\S+)\s+(.+)$/s);
+      if (!mm || !KINDS.includes(mm[2])) {
+        await reply(chat, "Format: /add 2026-12-14 shaheedi Sri Guru Tegh Bahadur Sahib Ji\nKinds: " + KINDS.join(", ") + "\nPunjabi name optional after | e.g. ... Ji | ਸ਼ਹੀਦੀ ਪੁਰਬ ...");
+      } else {
+        const [en, pa] = mm[3].split("|").map((x) => x.trim());
+        const cal = loadCalendar();
+        cal.events = cal.events.filter((e) => !(e.date === mm[1] && e.en === en));
+        cal.events.push({ date: mm[1], kind: mm[2], en, pa: pa || "" });
+        cal.events.sort((a, b) => a.date.localeCompare(b.date));
+        saveCalendar(cal);
+        await reply(chat, `📅 Saved: ${mm[1]} — ${en} (${mm[2]})`);
+      }
+    } else if (m.text && m.text.startsWith("/remove ")) {
+      const d = m.text.split(/\s+/)[1];
+      const cal = loadCalendar();
+      const before = cal.events.length;
+      cal.events = cal.events.filter((e) => e.date !== d);
+      saveCalendar(cal);
+      await reply(chat, `🗑️ Removed ${before - cal.events.length} event(s) on ${d}.`);
+    } else if (m.text === "/dates") {
+      const today = new Date().toISOString().slice(0, 10);
+      const up = loadCalendar().events.filter((e) => e.date >= today).slice(0, 15);
+      await reply(chat, up.length ? "📅 Upcoming:\n" + up.map((e) => `${e.date} · ${e.kind} · ${e.en}`).join("\n") : "No upcoming dates. Add them with /add");
+    } else if (m.text === "/status") {
+      const h = loadHistory();
+      const used = new Set(h.usedClips);
+      const fresh = fs.readdirSync(path.join(ROOT, "public/broll")).filter((f) => /\.(mp4|mov|m4v)$/i.test(f) && !used.has(path.parse(f).name)).length;
+      await reply(chat, `📊 Quotes: ${quotes.length}\n🎞️ Fresh clips (never used): ${fresh}\n🎵 Tracks: ${fs.readdirSync(path.join(ROOT, "public/music")).filter((f) => /\.(mp3|m4a|wav|aac)$/i.test(f)).length}\n📮 Posts recorded: ${h.posts.length}\n🤖 AI: ${aiOn() ? "on" : "off"}`);
+    } else if (m.text === "/ideas") {
+      if (!aiOn()) { await reply(chat, "🤖 AI is off — add the ANTHROPIC_API_KEY secret first."); }
+      else {
+        const ideas = await quoteIdeas(quotes.slice(-15).map((q) => q.text));
+        if (!ideas) { await reply(chat, "AI didn't answer — try /ideas again later."); }
+        else {
+          fs.writeFileSync(path.join(ROOT, "content/ai_ideas.json"), JSON.stringify(ideas, null, 2));
+          await reply(chat, "💡 Drafts in your voice. Keep the good ones with /keep 1 3 5\n\n" + ideas.map((t, i) => `${i + 1}. ${t}`).join("\n\n"));
+        }
+      }
+    } else if (m.text && m.text.startsWith("/keep")) {
+      let ideas = [];
+      try { ideas = JSON.parse(fs.readFileSync(path.join(ROOT, "content/ai_ideas.json"), "utf8")); } catch {}
+      const picks = (m.text.match(/\d+/g) || []).map(Number).filter((n) => ideas[n - 1]);
+      for (const n of picks) if (!quotes.some((q) => q.text === ideas[n - 1])) { quotes.push({ text: ideas[n - 1] }); added.quotes++; }
+      await reply(chat, picks.length ? `✅ Added ${picks.length} quote(s). Bank: ${quotes.length}` : "Nothing kept. Send /ideas first, then /keep 1 3");
     } else if (m.text === "/start") {
-      await reply(chat, "🙏 TheSikhSoul Inbox ready.\n• Text me a quote → quote bank\n• Send a video (normal, not as file) → b-roll\n• Send an mp3 → music library\n• /clean → remove the built-in starter quotes once yours are in");
+      await reply(chat, "🙏 TheSikhSoul Inbox ready.\n• Text me a quote → quote bank\n• Send a video as a FILE (📎 → File) → b-roll, full quality, max 19 MB\n• Send an mp3 → music library\n• /status → what I have\n• /dates → upcoming occasions\n• /add 2026-12-14 shaheedi Name → add an occasion\n• /remove 2026-12-14\n• /ideas → AI quote drafts, /keep 1 3 to save");
     } else if (m.video || (m.document && (m.document.mime_type || "").startsWith("video/"))) {
       const v = m.video || m.document;
       if ((v.file_size || 0) > MAX_BYTES) {
-        await reply(chat, "⚠️ Too large for me to fetch. Send it as a normal (compressed) video, not as a file.");
+        await reply(chat, "⚠️ Too big for me (over 19 MB). Trim it shorter and send it as a File again — files keep full quality.");
       } else {
         const rel = await download(v.file_id, "public/broll", `tg-${v.file_unique_id}`);
         added.videos++;

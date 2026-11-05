@@ -27,6 +27,8 @@ export type QuoteReelProps = {
   music: string | null;
   seed: number;
   logo?: string | null;
+  subtitle?: string | null;
+  eyebrow?: string | null;
   textStyle?: TextStyle;
   layout?: "card" | "full";
 };
@@ -37,6 +39,8 @@ export const QuoteReel: React.FC<QuoteReelProps> = ({
   music,
   seed,
   logo = null,
+  subtitle = null,
+  eyebrow = null,
   textStyle = "glow",
   layout = "card",
 }) => {
@@ -59,6 +63,17 @@ export const QuoteReel: React.FC<QuoteReelProps> = ({
     { extrapolateLeft: "clamp" }
   );
 
+
+  const subBlock = subtitle ? (
+    <div style={{ marginTop: 30, padding: "0 10px", fontFamily: latin.fontFamily, fontWeight: 400, fontSize: 30, lineHeight: 1.45, color: "rgba(255,255,255,0.88)", textAlign: "center", textShadow: "0 2px 10px rgba(0,0,0,0.85)" }}>
+      {subtitle}
+    </div>
+  ) : null;
+  const eyebrowBlock = eyebrow ? (
+    <div style={{ marginBottom: 26, fontFamily: gurmukhi.fontFamily, fontWeight: 500, fontSize: 28, letterSpacing: 1, color: theme.gold, textAlign: "center", textShadow: "0 2px 10px rgba(0,0,0,0.85)" }}>
+      {eyebrow}
+    </div>
+  ) : null;
   const watermark = (
     <div
       style={{
@@ -105,6 +120,7 @@ export const QuoteReel: React.FC<QuoteReelProps> = ({
             transform: `scale(${scale})`,
           }}
         >
+          {eyebrowBlock}
           <StyledText
             text={rest ? `${headline}\n${rest}` : headline}
             textStyle={textStyle}
@@ -112,6 +128,7 @@ export const QuoteReel: React.FC<QuoteReelProps> = ({
             fontSize={headSize}
             fontWeight={600}
           />
+          {subBlock}
         </div>
         {watermark}
       </AbsoluteFill>
@@ -146,6 +163,7 @@ export const QuoteReel: React.FC<QuoteReelProps> = ({
           transform: `scale(${scale})`,
         }}
       >
+        {eyebrowBlock}
         <StyledText
           text={headline}
           textStyle={textStyle === "strip" ? "simple" : textStyle}
@@ -165,12 +183,13 @@ export const QuoteReel: React.FC<QuoteReelProps> = ({
             />
           </div>
         ) : null}
+        {subBlock}
       </div>
 
       <div
         style={{
           position: "absolute",
-          top: "46%",
+          top: subtitle ? "56%" : "46%",
           width: "100%",
           height: stripH,
           overflow: "hidden",
