@@ -11,6 +11,18 @@
         "broll/pb-1844.mp4"
       ],
       "style": "simple"
+    },
+    {
+      "date": "2026-11-06",
+      "forDate": "2026-11-06",
+      "file": "reel-20261106-0910.mp4",
+      "kind": "quote",
+      "quote": "Waheguru Ji 🙏",
+      "music": "music/tg-AgAD2CMAAswIYFQ.mp3",
+      "clips": [
+        "broll/pb-126920.mp4"
+      ],
+      "style": "shine"
     }
   ],
   "usedClips": [
@@ -27,6 +39,7 @@
     "tg-AgADmyAAAqcbUFQ",
     "tg-AgADnCAAAqcbUFQ",
     "tg-AgADnSAAAqcbUFQ",
-    "pb-1844"
+    "pb-1844",
+    "pb-126920"
   ]
 }
