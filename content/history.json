@@ -23,6 +23,18 @@
         "broll/pb-126920.mp4"
       ],
       "style": "shine"
+    },
+    {
+      "date": "2026-11-07",
+      "forDate": "2026-11-07",
+      "file": "reel-20261107-0844.mp4",
+      "kind": "quote",
+      "quote": "When every door seemed closed, I found shrine at His place only! ✨️",
+      "music": "music/tg-AgAD5SIAAnuV8VU.mp3",
+      "clips": [
+        "broll/pb-149958.mp4"
+      ],
+      "style": "glow"
     }
   ],
   "usedClips": [
@@ -40,6 +52,7 @@
     "tg-AgADnCAAAqcbUFQ",
     "tg-AgADnSAAAqcbUFQ",
     "pb-1844",
-    "pb-126920"
+    "pb-126920",
+    "pb-149958"
   ]
 }
