@@ -35,6 +35,18 @@
         "broll/pb-149958.mp4"
       ],
       "style": "glow"
+    },
+    {
+      "date": "2026-11-08",
+      "forDate": "2026-11-08",
+      "file": "reel-20261108-0813.mp4",
+      "kind": "quote",
+      "quote": "Prayers work and tables turn ✨️",
+      "music": "music/tg-AgADUSEAAiBkeFQ.mp3",
+      "clips": [
+        "broll/pb-186714.mp4"
+      ],
+      "style": "strip"
     }
   ],
   "usedClips": [
@@ -53,6 +65,7 @@
     "tg-AgADnSAAAqcbUFQ",
     "pb-1844",
     "pb-126920",
-    "pb-149958"
+    "pb-149958",
+    "pb-186714"
   ]
 }
