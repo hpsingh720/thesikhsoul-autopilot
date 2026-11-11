@@ -71,6 +71,18 @@
         "broll/pb-233616.mp4"
       ],
       "style": "simple"
+    },
+    {
+      "date": "2026-11-11",
+      "forDate": "2026-11-11",
+      "file": "reel-20261111-0834.mp4",
+      "kind": "celebration",
+      "quote": null,
+      "music": "music/tg-AgADniAAAqcbUFQ.mp3",
+      "clips": [
+        "broll/pb-233623.mp4"
+      ],
+      "style": "shine"
     }
   ],
   "usedClips": [
@@ -92,6 +104,7 @@
     "pb-149958",
     "pb-186714",
     "pb-84881",
-    "pb-233616"
+    "pb-233616",
+    "pb-233623"
   ]
 }
