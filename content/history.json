@@ -119,6 +119,18 @@
         "broll/pb-241923.mp4"
       ],
       "style": "simple"
+    },
+    {
+      "date": "2026-11-15",
+      "forDate": "2026-11-15",
+      "file": "reel-20261115-0837.mp4",
+      "kind": "quote",
+      "quote": "This is what Peace feels like ❤️",
+      "music": "music/tg-AgAD2CMAAswIYFQ.mp3",
+      "clips": [
+        "broll/pb-210788.mp4"
+      ],
+      "style": "glow"
     }
   ],
   "usedClips": [
@@ -144,6 +156,7 @@
     "pb-233623",
     "pb-233622",
     "pb-233618",
-    "pb-241923"
+    "pb-241923",
+    "pb-210788"
   ]
 }
