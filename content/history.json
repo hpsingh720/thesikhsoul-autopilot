@@ -131,6 +131,18 @@
         "broll/pb-210788.mp4"
       ],
       "style": "glow"
+    },
+    {
+      "date": "2026-11-16",
+      "forDate": "2026-11-16",
+      "file": "reel-20261116-0840.mp4",
+      "kind": "remembrance",
+      "quote": null,
+      "music": "music/tg-AgAD5SIAAnuV8VU.mp3",
+      "clips": [
+        "broll/pb-153558.mp4"
+      ],
+      "style": "simple"
     }
   ],
   "usedClips": [
@@ -157,6 +169,7 @@
     "pb-233622",
     "pb-233618",
     "pb-241923",
-    "pb-210788"
+    "pb-210788",
+    "pb-153558"
   ]
 }
