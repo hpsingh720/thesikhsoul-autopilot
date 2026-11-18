@@ -155,6 +155,18 @@
         "broll/pb-233617.mp4"
       ],
       "style": "glow"
+    },
+    {
+      "date": "2026-11-18",
+      "forDate": "2026-11-18",
+      "file": "reel-20261118-1017.mp4",
+      "kind": "hukamnama",
+      "quote": null,
+      "music": "music/tg-AgADZSQAAprekFY.mp3",
+      "clips": [
+        "broll/pb-241922.mp4"
+      ],
+      "style": "simple"
     }
   ],
   "usedClips": [
@@ -183,6 +195,7 @@
     "pb-241923",
     "pb-210788",
     "pb-153558",
-    "pb-233617"
+    "pb-233617",
+    "pb-241922"
   ]
 }
