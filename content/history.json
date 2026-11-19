@@ -167,6 +167,18 @@
         "broll/pb-241922.mp4"
       ],
       "style": "simple"
+    },
+    {
+      "date": "2026-11-19",
+      "forDate": "2026-11-19",
+      "file": "reel-20261119-1001.mp4",
+      "kind": "quote",
+      "quote": "Two things i know for sure: Prayers work and tables turn",
+      "music": "music/tg-AgADnDkAAkPScVU.mp3",
+      "clips": [
+        "broll/pb-238405.mp4"
+      ],
+      "style": "glow"
     }
   ],
   "usedClips": [
@@ -196,6 +208,7 @@
     "pb-210788",
     "pb-153558",
     "pb-233617",
-    "pb-241922"
+    "pb-241922",
+    "pb-238405"
   ]
 }
