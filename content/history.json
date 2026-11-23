@@ -215,6 +215,18 @@
         "broll/pb-238403.mp4"
       ],
       "style": "simple"
+    },
+    {
+      "date": "2026-11-23",
+      "forDate": "2026-11-23",
+      "file": "reel-20261123-0931.mp4",
+      "kind": "quote",
+      "quote": "God's ability to flip the script at any moment is unmatched",
+      "music": "music/tg-AgAD0CMAAswIYFQ.mp3",
+      "clips": [
+        "broll/pb-131591.mp4"
+      ],
+      "style": "glow"
     }
   ],
   "usedClips": [
@@ -248,6 +260,7 @@
     "pb-238405",
     "pb-210786",
     "pb-238402",
-    "pb-238403"
+    "pb-238403",
+    "pb-131591"
   ]
 }
