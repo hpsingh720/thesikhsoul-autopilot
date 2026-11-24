@@ -227,6 +227,18 @@
         "broll/pb-131591.mp4"
       ],
       "style": "glow"
+    },
+    {
+      "date": "2026-11-24",
+      "forDate": "2026-11-24",
+      "file": "reel-20261124-1238.mp4",
+      "kind": "celebration",
+      "quote": null,
+      "music": "music/tg-AgAD2CMAAswIYFQ.mp3",
+      "clips": [
+        "broll/pb-346654.mp4"
+      ],
+      "style": "shine"
     }
   ],
   "usedClips": [
@@ -261,6 +273,7 @@
     "pb-210786",
     "pb-238402",
     "pb-238403",
-    "pb-131591"
+    "pb-131591",
+    "pb-346654"
   ]
 }
