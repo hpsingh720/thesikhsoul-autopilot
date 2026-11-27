@@ -263,6 +263,18 @@
         "broll/pb-377080.mp4"
       ],
       "style": "simple"
+    },
+    {
+      "date": "2026-11-27",
+      "forDate": "2026-11-27",
+      "file": "reel-20261127-1053.mp4",
+      "kind": "quote",
+      "quote": "God does not demand that we be perfect, but that we be perfectly honest about our imperfections!",
+      "music": "music/tg-AgADZSQAAprekFY.mp3",
+      "clips": [
+        "broll/pb-217105.mp4"
+      ],
+      "style": "shine"
     }
   ],
   "usedClips": [
@@ -300,6 +312,7 @@
     "pb-131591",
     "pb-346654",
     "pb-375113",
-    "pb-377080"
+    "pb-377080",
+    "pb-217105"
   ]
 }
