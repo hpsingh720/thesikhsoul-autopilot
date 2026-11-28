@@ -275,6 +275,18 @@
         "broll/pb-217105.mp4"
       ],
       "style": "shine"
+    },
+    {
+      "date": "2026-11-28",
+      "forDate": "2026-11-28",
+      "file": "reel-20261128-1028.mp4",
+      "kind": "quote",
+      "quote": "Overthinking?\nTry Overpraying!",
+      "music": "music/tg-AgADnDkAAkPScVU.mp3",
+      "clips": [
+        "broll/pb-229452.mp4"
+      ],
+      "style": "glow"
     }
   ],
   "usedClips": [
@@ -313,6 +325,7 @@
     "pb-346654",
     "pb-375113",
     "pb-377080",
-    "pb-217105"
+    "pb-217105",
+    "pb-229452"
   ]
 }
